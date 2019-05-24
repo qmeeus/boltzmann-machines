@@ -2,11 +2,10 @@ from __future__ import division
 from __future__ import absolute_import
 import numpy as np
 import tensorflow as tf
-from tensorflow.contrib.distributions import Multinomial
+import tensorflow_probability as tfp
 
-from .env import *
+from boltzmann_machines.layers import BernoulliLayer, MultinomialLayer, GaussianLayer
 from .base_rbm import BaseRBM
-from layers import BernoulliLayer, MultinomialLayer, GaussianLayer
 
 
 class BernoulliRBM(BaseRBM):
@@ -55,7 +54,7 @@ class MultinomialRBM(BaseRBM):
         with tf.name_scope('free_energy'):
             T1 = -tf.einsum('ij,j->i', v, self._vb)
             T2 = -tf.matmul(v, self._W)
-            h_hat = Multinomial(total_count=M, logits=tf.ones([K])).sample()
+            h_hat = tfp.distributions.Multinomial(total_count=M, logits=tf.ones([K])).sample()
             T3 = tf.einsum('ij,j->i', T2, h_hat)
             fe = tf.reduce_mean(T1 + T3, axis=0)
             fe += -tf.lgamma(M + K) + tf.lgamma(M + 1) + tf.lgamma(K)

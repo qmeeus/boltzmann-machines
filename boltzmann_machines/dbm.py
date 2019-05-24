@@ -4,8 +4,8 @@ from builtins import zip
 from builtins import range
 import numpy as np
 import tensorflow as tf
+import tensorflow_probability as tfp
 from tensorflow.core.framework import summary_pb2
-from tensorflow.contrib.distributions import Bernoulli
 
 from .base import run_in_tf_session
 from .ebm import EnergyBasedModel
@@ -702,7 +702,7 @@ class DBM(EnergyBasedModel):
 
             # x_0 ~ Ber(0.5) of size (M, H_1)
             logits = tf.zeros([self._n_ais_runs, self._n_hiddens[0]])
-            T = Bernoulli(logits=logits).sample(seed=self.make_random_seed())
+            T = tfp.distributions.Bernoulli(logits=logits).sample(seed=self.make_random_seed())
             x_0 = tf.cast(T, dtype=self._tf_dtype)
 
             # x_1 ~ T_1(x_1 | x_0)
