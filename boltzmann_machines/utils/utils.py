@@ -70,11 +70,11 @@ def one_hot(y, n_classes=None):
     --------
     >>> y = [2, 1, 0, 2, 0]
     >>> one_hot(y)
-    array([[ 0.,  0.,  1.],
-           [ 0.,  1.,  0.],
-           [ 1.,  0.,  0.],
-           [ 0.,  0.,  1.],
-           [ 1.,  0.,  0.]])
+    array([[0., 0., 1.],
+           [0., 1., 0.],
+           [1., 0., 0.],
+           [0., 0., 1.],
+           [1., 0., 0.]])
     """
     n_classes = n_classes or np.max(y) + 1
     return np.eye(n_classes)[y]
@@ -89,10 +89,10 @@ def one_hot_decision_function(y):
     ...      [0.2, 0.2, 0.6],
     ...      [0.3, 0.4, 0.3]]
     >>> one_hot_decision_function(y)
-    array([[ 0.,  0.,  1.],
-           [ 1.,  0.,  0.],
-           [ 0.,  0.,  1.],
-           [ 0.,  1.,  0.]])
+    array([[0., 0., 1.],
+           [1., 0., 0.],
+           [0., 0., 1.],
+           [0., 1., 0.]])
     """
     z = np.zeros_like(y)
     z[np.arange(len(z)), np.argmax(y, axis=1)] = 1
@@ -157,10 +157,10 @@ def log_diff_exp(x):
 
     Examples
     --------
-    >>> log_diff_exp([1, 2, 3]) #doctest: +ELLIPSIS
-    array([ 1.5413...,  2.5413...])
-    >>> [np.log(np.exp(2)-np.exp(1)), np.log(np.exp(3)-np.exp(2))] #doctest: +ELLIPSIS
-    [1.5413..., 2.5413...]
+    >>> np.round(log_diff_exp([1, 2, 3]), 4) #doctest: +ELLIPSIS
+    array([1.5413, 2.5413])
+    >>> np.round([np.log(np.exp(2)-np.exp(1)), np.log(np.exp(3)-np.exp(2))], 4) #doctest: +ELLIPSIS
+    array([1.5413, 2.5413])
     """
     x = np.asarray(x)
     a = max(x)
@@ -174,11 +174,11 @@ def log_std_exp(x, log_mean_exp_x=None):
     --------
     >>> x = np.arange(8.)
     >>> print(x)
-    [ 0.  1.  2.  3.  4.  5.  6.  7.]
-    >>> log_std_exp(x) #doctest: +ELLIPSIS
-    5.875416...
-    >>> np.log(np.std(np.exp(x))) #doctest: +ELLIPSIS
-    5.875416...
+    [0. 1. 2. 3. 4. 5. 6. 7.]
+    >>> np.round(log_std_exp(x), 4) #doctest: +ELLIPSIS
+    5.8754
+    >>> np.round(np.log(np.std(np.exp(x))), 4) #doctest: +ELLIPSIS
+    5.8754
     """
     x = np.asarray(x)
     m = log_mean_exp_x
