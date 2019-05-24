@@ -1,7 +1,7 @@
 from __future__ import division
 import numpy as np
 import tensorflow as tf
-from tensorflow.contrib.distributions import Bernoulli, Multinomial, Normal
+import tensorflow_probability as tfp
 
 from boltzmann_machines.base import DtypeMixin
 
@@ -49,7 +49,7 @@ class BernoulliLayer(BaseLayer):
         return tf.nn.sigmoid(x + b)
 
     def _sample(self, means):
-        return Bernoulli(probs=means)
+        return tfp.distributions.Bernoulli(probs=means)
 
 
 class MultinomialLayer(BaseLayer):
@@ -68,7 +68,7 @@ class MultinomialLayer(BaseLayer):
 
     def _sample(self, means):
         probs = tf.to_float(means / tf.reduce_sum(means))
-        return Multinomial(total_count=self.n_samples, probs=probs)
+        return tfp.distributions.Multinomial(total_count=self.n_samples, probs=probs)
 
 
 class GaussianLayer(BaseLayer):
@@ -87,4 +87,4 @@ class GaussianLayer(BaseLayer):
         return t
 
     def _sample(self, means):
-        return Normal(loc=means, scale=tf.cast(self.sigma, dtype=self._tf_dtype))
+        return tfp.distributions.Normal(loc=means, scale=tf.cast(self.sigma, dtype=self._tf_dtype))
