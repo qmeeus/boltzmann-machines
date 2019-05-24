@@ -1,6 +1,5 @@
 from __future__ import division
 from __future__ import absolute_import
-from past.utils import old_div
 import numpy as np
 import tensorflow as tf
 from tensorflow.contrib.distributions import Multinomial
@@ -122,7 +121,7 @@ class GaussianRBM(BaseRBM):
 def logit_mean(X):
     p = np.mean(X, axis=0)
     p = np.clip(p, 1e-7, 1. - 1e-7)
-    q = np.log(old_div(p, (1. - p)))
+    q = np.log(p / (1. - p))
     return q
 
 

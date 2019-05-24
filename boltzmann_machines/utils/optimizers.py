@@ -1,6 +1,5 @@
 from __future__ import division
 from builtins import zip
-from past.utils import old_div
 from keras import backend as K
 from keras.legacy import interfaces
 from keras.optimizers import Optimizer
@@ -33,8 +32,7 @@ class MultiAdam(Optimizer):
                                                   K.dtype(self.decay))))
 
         t = K.cast(self.iterations, K.floatx()) + 1
-        lr_t = lr * (old_div(K.sqrt(1. - K.pow(self.beta_2, t)),
-                     (1. - K.pow(self.beta_1, t))))
+        lr_t = lr * (K.sqrt(1. - K.pow(self.beta_2, t)) / (1. - K.pow(self.beta_1, t)))
 
         ms = [K.zeros(K.int_shape(p), dtype=K.dtype(p)) for p in params]
         vs = [K.zeros(K.int_shape(p), dtype=K.dtype(p)) for p in params]
@@ -48,7 +46,7 @@ class MultiAdam(Optimizer):
                     break
             m_t = (self.beta_1 * m) + (1. - self.beta_1) * g
             v_t = (self.beta_2 * v) + (1. - self.beta_2) * K.square(g)
-            p_t = p - old_div(lr_t * lr_m * m_t, (K.sqrt(v_t) + self.epsilon))
+            p_t = p - lr_t * lr_m * m_t / (K.sqrt(v_t) + self.epsilon)
 
             self.updates.append(K.update(m, m_t))
             self.updates.append(K.update(v, v_t))

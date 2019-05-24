@@ -1,6 +1,5 @@
 from __future__ import division
 from builtins import range
-from past.utils import old_div
 import struct
 import pickle
 import os.path
@@ -132,7 +131,7 @@ def im_unflatten(X):
     X = np.asarray(X)
     if len(X.shape) == 1:
         X = np.expand_dims(X, 0)
-    D = int(np.sqrt(old_div(X.shape[1],3)))
+    D = int(np.sqrt(X.shape[1] / 3))
     X = X.reshape((-1, 3, D, D)).transpose(0, 2, 3, 1)
     if X.shape[0] == 1:
         X = X[0, ...]

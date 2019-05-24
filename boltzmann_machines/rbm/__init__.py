@@ -1,2 +1,10 @@
-from .base_rbm import *
-from .rbm import *
+
+from .rbm import BernoulliRBM, MultinomialRBM, GaussianRBM
+
+
+__all__ = [
+    'BernoulliRBM',
+    'MultinomialRBM',
+    'GaussianRBM',
+]
+

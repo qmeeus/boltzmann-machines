@@ -2,16 +2,15 @@ from __future__ import division
 from builtins import zip
 from builtins import str
 from builtins import range
-from past.utils import old_div
 import numpy as np
 import tensorflow as tf
 from tensorflow.core.framework import summary_pb2
 
-from boltzmann_machines.rbm.ebm import EnergyBasedModel
-from boltzmann_machines.rbm.base import run_in_tf_session, is_attribute_name
-from boltzmann_machines.rbm.utils import (make_list_from, batch_iter, epoch_iter,
+from boltzmann_machines.ebm import EnergyBasedModel
+from boltzmann_machines.base import run_in_tf_session, is_attribute_name
+from boltzmann_machines.utils import (make_list_from, batch_iter, epoch_iter,
                                       write_during_training)
-from boltzmann_machines.rbm.utils.testing import assert_len, assert_shape
+from boltzmann_machines.utils.testing import assert_len, assert_shape
 
 
 class BaseRBM(EnergyBasedModel):
@@ -451,7 +450,7 @@ class BaseRBM(EnergyBasedModel):
             with tf.name_scope('dW'):
                 dW_positive = tf.matmul(self._X_batch, h0_means, transpose_a=True)
                 dW_negative = tf.matmul(v_states, h_means, transpose_a=True)
-                dW = old_div((dW_positive - dW_negative), N) - self._l2 * self._W
+                dW = (dW_positive - dW_negative) / N - self._l2 * self._W
             with tf.name_scope('dvb'):
                 dvb = tf.reduce_mean(self._X_batch - v_states, axis=0) # == sum / N
             with tf.name_scope('dhb'):
