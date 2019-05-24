@@ -1,3 +1,4 @@
+from builtins import object
 import os
 import numpy as np
 from shutil import rmtree

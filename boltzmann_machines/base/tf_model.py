@@ -95,7 +95,7 @@ class TensorFlowModel(BaseModel, DtypeMixin):
         paths = paths or {}
         if not paths:
             paths = TensorFlowModel.compute_working_paths(model_path=model_path)
-        for k, v in paths.items():
+        for k, v in list(paths.items()):
             setattr(self, '_{0}'.format(k), v)
 
     def _make_tf_model(self):

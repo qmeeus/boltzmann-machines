@@ -1,3 +1,4 @@
+from builtins import object
 from nose.tools import eq_
 
 from boltzmann_machines.base import TensorFlowModel as TFM

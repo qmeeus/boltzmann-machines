@@ -1,3 +1,5 @@
+from builtins import str
+from builtins import range
 import numpy as np
 import seaborn as sns
 from matplotlib import pyplot as plt
@@ -124,7 +126,7 @@ def im_gif(matrices, im, fig, fname=None, title_func=None,
 
 def plot_confusion_matrix(C, labels=None, labels_fontsize=13, **heatmap_params):
     # default params
-    labels = labels or range(C.shape[0])
+    labels = labels or list(range(C.shape[0]))
     annot_fontsize = 14
     xy_label_fontsize = 21
 

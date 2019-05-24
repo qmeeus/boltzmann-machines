@@ -1,3 +1,8 @@
+from __future__ import division
+from builtins import str
+from builtins import zip
+from builtins import range
+from past.utils import old_div
 import numpy as np
 import tensorflow as tf
 from tensorflow.core.framework import summary_pb2
@@ -510,7 +515,7 @@ class DBM(EnergyBasedModel):
 
     def _apply_max_norm(self, T):
         T_norm = tf.norm(T, axis=0)
-        return T * tf.minimum(T_norm, self._max_norm) / tf.maximum(T_norm, 1e-8), T_norm
+        return old_div(T * tf.minimum(T_norm, self._max_norm), tf.maximum(T_norm, 1e-8)), T_norm
 
     def _make_train_op(self):
         # run mean-field updates for current mini-batch
@@ -555,16 +560,16 @@ class DBM(EnergyBasedModel):
                 dW = []
                 # first layer of weights
                 with tf.name_scope('dW'):
-                    dW_0_positive = tf.matmul(a=self._X_batch, b=self._mu[0], transpose_a=True) / self._N
-                    dW_0_negative = tf.matmul(a=self._v, b=self._H[0], transpose_a=True) / self._M
+                    dW_0_positive = old_div(tf.matmul(a=self._X_batch, b=self._mu[0], transpose_a=True), self._N)
+                    dW_0_negative = old_div(tf.matmul(a=self._v, b=self._H[0], transpose_a=True), self._M)
                     dW_0 = (dW_0_positive - dW_0_negative) - self._l2 * self._W[0]
                     dW.append(dW_0)
 
                 # ... rest of them
                 for i in range(1, self.n_layers_):
                     with tf.name_scope('dW'):
-                        dW_i_positive = tf.matmul(a=self._mu[i - 1], b=self._mu[i], transpose_a=True) / self._N
-                        dW_i_negative = tf.matmul(a=self._H[i - 1], b=self._H[i], transpose_a=True) / self._M
+                        dW_i_positive = old_div(tf.matmul(a=self._mu[i - 1], b=self._mu[i], transpose_a=True), self._N)
+                        dW_i_negative = old_div(tf.matmul(a=self._H[i - 1], b=self._H[i], transpose_a=True), self._M)
                         dW_i = (dW_i_positive - dW_i_negative) - self._l2 * self._W[i]
                         dW.append(dW_i)
 
@@ -786,7 +791,7 @@ class DBM(EnergyBasedModel):
 
         # prepend name of the scope, and append ':0'
         feed_dict = {}
-        for k, v in d.items():
+        for k, v in list(d.items()):
             feed_dict['input_data/{0}:0'.format(k)] = v
         return feed_dict
 

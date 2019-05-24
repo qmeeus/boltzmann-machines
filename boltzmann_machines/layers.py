@@ -1,3 +1,5 @@
+from __future__ import division
+from past.utils import old_div
 import numpy as np
 import tensorflow as tf
 from tensorflow.contrib.distributions import Bernoulli, Multinomial, Normal
@@ -66,7 +68,7 @@ class MultinomialLayer(BaseLayer):
         return self.n_samples * tf.nn.softmax(x + b)
 
     def _sample(self, means):
-        probs = tf.to_float(means / tf.reduce_sum(means))
+        probs = tf.to_float(old_div(means, tf.reduce_sum(means)))
         return Multinomial(total_count=self.n_samples, probs=probs)
 
 

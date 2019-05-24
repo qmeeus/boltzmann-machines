@@ -1,3 +1,4 @@
+from builtins import range
 import numpy as np
 
 from tqdm import tqdm, tqdm_notebook
@@ -35,14 +36,14 @@ def batch_iter(X, batch_size=10, verbose=False, desc='epoch'):
     X = np.asarray(X)
     N = len(X)
     n_batches = N // batch_size + (N % batch_size > 0)
-    gen = range(n_batches)
+    gen = list(range(n_batches))
     if verbose:
         gen = progress_bar(gen, leave=False, ncols=64, desc=desc)
     for i in gen:
         yield X[i*batch_size:(i + 1)*batch_size]
 
 def epoch_iter(start_epoch, max_epoch, verbose=False):
-    gen = range(start_epoch + 1, max_epoch + 1)
+    gen = list(range(start_epoch + 1, max_epoch + 1))
     if verbose:
         gen = progress_bar(gen, leave=True, ncols=84, desc='training')
     for epoch in gen:
