@@ -126,6 +126,6 @@ def logit_mean(X):
 
 if __name__ == '__main__':
     # run corresponding tests
-    from utils.testing import run_tests
+    from ..utils.testing import run_tests
     from .tests import test_rbm as t
     run_tests(__file__, t)
