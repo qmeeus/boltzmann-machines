@@ -1,8 +1,25 @@
-FROM python:2
+FROM tensorflow/tensorflow:nightly-devel-py3
 
-RUN mkdir -p /var/app
-WORKDIR /var/app
-COPY . /var/app
+ENV DEBIAN_FRONTEND=noninteractive
+COPY requirements.txt ./
+RUN apt update && \
+    apt-get install python3-matplotlib -y && \
+	pip install --upgrade pip && \
+    pip install -r requirements.txt
 
-RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
+ARG user_id
+RUN useradd --uid $user_id --shell /bin/bash --create-home patrick
+USER patrick
+
+WORKDIR /home/patrick
+RUN mkdir /home/patrick/app
+WORKDIR /home/patrick/app
+
+ENV LC_ALL=C.UTF-8
+ENV LANG=C.UTF-8
+
+VOLUME ["/home/patrick/app"]
+
+COPY --chown=patrick:users docker-entrypoint.sh /home/patrick
+RUN chmod 755 ~/docker-entrypoint.sh
+ENTRYPOINT ["/home/patrick/docker-entrypoint.sh"]
