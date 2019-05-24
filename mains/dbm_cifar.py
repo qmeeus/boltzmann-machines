@@ -44,7 +44,6 @@ from keras.models import Sequential
 from keras.layers import Dense, Activation, Dropout, BatchNormalization as BN
 from sklearn.metrics import accuracy_score
 
-import env
 from boltzmann_machines import DBM
 from boltzmann_machines.rbm import GaussianRBM, MultinomialRBM
 from boltzmann_machines.utils import (RNG, Stopwatch,
@@ -106,8 +105,8 @@ def make_augmentation(X_train, y_train, n_train, args):
 
     return X_aug, y_train
 
-def make_small_rbms(xxx_todo_changeme, args):
-    (X_train, X_val) = xxx_todo_changeme
+def make_small_rbms(data, args):
+    (X_train, X_val) = data
     X_train = im_unflatten(X_train)
     X_val = im_unflatten(X_val)
 
@@ -277,8 +276,8 @@ def make_large_weights(small_rbms):
 
     return W, vb, hb
 
-def make_grbm(xxx_todo_changeme1, small_rbms, args):
-    (X_train, X_val) = xxx_todo_changeme1
+def make_grbm(data, small_rbms, args):
+    (X_train, X_val) = data
     if os.path.isdir(args.grbm_dirpath):
         print("\nLoading G-RBM ...\n\n")
         grbm = GaussianRBM.load_model(args.grbm_dirpath)
@@ -323,8 +322,8 @@ def make_grbm(xxx_todo_changeme1, small_rbms, args):
         grbm.fit(X_train, X_val)
     return grbm
 
-def make_mrbm(xxx_todo_changeme2, args):
-    (Q_train, Q_val) = xxx_todo_changeme2
+def make_mrbm(data, args):
+    (Q_train, Q_val) = data
     if os.path.isdir(args.mrbm_dirpath):
         print("\nLoading M-RBM ...\n\n")
         mrbm = MultinomialRBM.load_model(args.mrbm_dirpath)
@@ -388,9 +387,9 @@ def make_rbm_transform(rbm, X, path, np_dtype=None):
         np.save(path, H)
     return H
 
-def make_dbm(xxx_todo_changeme3, rbms, xxx_todo_changeme4, args):
-    (X_train, X_val) = xxx_todo_changeme3
-    (Q, G) = xxx_todo_changeme4
+def make_dbm(data, rbms, QG, args):
+    (X_train, X_val) = data
+    (Q, G) = QG
     if os.path.isdir(args.dbm_dirpath):
         print("\nLoading DBM ...\n\n")
         dbm = DBM.load_model(args.dbm_dirpath)
@@ -429,11 +428,11 @@ def make_dbm(xxx_todo_changeme3, rbms, xxx_todo_changeme4, args):
         dbm.fit(X_train, X_val)
     return dbm
 
-def make_mlp(xxx_todo_changeme5, xxx_todo_changeme6, xxx_todo_changeme7, xxx_todo_changeme8, args):
-    (X_train, y_train) = xxx_todo_changeme5
-    (X_val, y_val) = xxx_todo_changeme6
-    (X_test, y_test) = xxx_todo_changeme7
-    (W, hb) = xxx_todo_changeme8
+def make_mlp(training_data, validation_data, test_data, W, args):
+    (X_train, y_train) = training_data
+    (X_val, y_val) = validation_data
+    (X_test, y_test) = test_data
+    (W, hb) = W
     dense_params = {}
     if W is not None and hb is not None:
         dense_params['weights'] = (W, hb)

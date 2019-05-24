@@ -18,7 +18,7 @@ data:
 	mv cifar-10-batches-py data
 
 jupyter:
-	sudo jupyter nbextension enable --py --sys-prefix widgetsnbextension
+	jupyter nbextension enable --py --sys-prefix widgetsnbextension
 	jupyter notebook --NotebookApp.iopub_data_rate_limit=100000000
 
 .PHONY: test clean data jupyter

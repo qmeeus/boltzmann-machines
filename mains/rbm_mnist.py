@@ -35,8 +35,8 @@ from sklearn.metrics import accuracy_score
 from boltzmann_machines.rbm import BernoulliRBM, logit_mean
 from boltzmann_machines.utils import (RNG, Stopwatch,
                                       one_hot, one_hot_decision_function, unhot)
-#from boltzmann_machines.utils.dataset import load_mnist
-from keras.datasets import mnist  # import load_data as load_mnist
+
+from keras.datasets import mnist
 from boltzmann_machines.utils.optimizers import MultiAdam
 
 

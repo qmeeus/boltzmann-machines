@@ -36,12 +36,12 @@ from keras.models import Sequential
 from keras.layers import Dense, Activation
 from sklearn.metrics import accuracy_score
 
-import env
 from boltzmann_machines import DBM
 from boltzmann_machines.rbm import BernoulliRBM
 from boltzmann_machines.utils import (RNG, Stopwatch,
                                       one_hot, one_hot_decision_function, unhot)
-from boltzmann_machines.utils.dataset import load_mnist
+
+from keras.datasets import mnist
 from boltzmann_machines.utils.optimizers import MultiAdam
 
 
@@ -128,9 +128,9 @@ def make_rbm2(Q, args):
         rbm2.fit(Q)
     return rbm2
 
-def make_dbm(xxx_todo_changeme, rbms, xxx_todo_changeme1, args):
-    (X_train, X_val) = xxx_todo_changeme
-    (Q, G) = xxx_todo_changeme1
+def make_dbm(data, rbms, QG, args):
+    (X_train, X_val) = data
+    (Q, G) = QG
     if os.path.isdir(args.dbm_dirpath):
         print("\nLoading DBM ...\n\n")
         dbm = DBM.load_model(args.dbm_dirpath)
@@ -169,12 +169,12 @@ def make_dbm(xxx_todo_changeme, rbms, xxx_todo_changeme1, args):
         dbm.fit(X_train, X_val)
     return dbm
 
-def make_mlp(xxx_todo_changeme2, xxx_todo_changeme3, xxx_todo_changeme4, xxx_todo_changeme5, xxx_todo_changeme6, args):
-    (X_train, y_train) = xxx_todo_changeme2
-    (X_val, y_val) = xxx_todo_changeme3
-    (X_test, y_test) = xxx_todo_changeme4
-    (W, hb) = xxx_todo_changeme5
-    (W2, hb2) = xxx_todo_changeme6
+def make_mlp(training_data, validation_data, test_data, W1, W2, args):
+    (X_train, y_train) = training_data
+    (X_val, y_val) = validation_data
+    (X_test, y_test) = test_data
+    (W, hb) = W1
+    (W2, hb2) = W2
     dense_params = {}
     if W is not None and hb is not None:
         dense_params['weights'] = (W, hb)
